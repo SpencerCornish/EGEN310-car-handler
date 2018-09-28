@@ -45,10 +45,10 @@ x = 0
 
 
 # Load default font.
-font = ImageFont.load_default()
+# font = ImageFont.load_default()
 # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
-# font = ImageFont.truetype('Minecraftia.ttf', 8)
+font = ImageFont.truetype('font.ttf', 12)
 
 currentDisplayText = ""
 isConnected = False
@@ -64,8 +64,7 @@ def setDisplayText():
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
     # Display image.
-    draw.text((x, top), currentDisplayText + ":" +
-              str(isConnected), font=font, fill=255)
+    draw.text((x, top), currentDisplayText, font=font, fill=255)
     disp.image(image)
     disp.display()
 
