@@ -63,22 +63,23 @@ redisPubSub.subscribe('disp.text')
 def setDisplayText():
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    draw.text((x, top), currentDisplayText, font=font, fill=255)
     # Display image.
+    draw.text((x, top), currentDisplayText + ":" +
+              str(isConnected), font=font, fill=255)
     disp.image(image)
     disp.display()
 
 
 while True:
-    # Query for new display text
+        # Query for new display text
     newDispText = redisPubSub.get_message(
         ignore_subscribe_messages=True,
         timeout=0.5,
     )
     # If we have a new string to put on the screen, and it isn't the same as the current one, set it
-    if newDispText and newDispText != currentDisplayText:
-        print("textUpdateEvent: " + newDispText)
-        currentDisplayText = newDispText
+    if newDispText and newDispText['data'] != currentDisplayText:
+        print("textUpdateEvent: " + newDispText['data'])
+        currentDisplayText = newDispText['data']
         setDisplayText()
 
     # if we're connected but we think we aren't update.
