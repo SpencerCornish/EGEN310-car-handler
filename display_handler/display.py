@@ -1,7 +1,6 @@
-import redis
 import os
-import time
-
+import subprocess
+import redis
 import time
 
 import Adafruit_SSD1306
@@ -10,7 +9,6 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-import subprocess
 
 RST = None     # on the PiOLED this pin isnt used
 
@@ -93,45 +91,3 @@ while True:
             isConnected = False
             setDisplayText()
             print("disconnection event. isConnected changing to False")
-
-
-# old
-# import redis
-# import os
-# import time
-
-# notConnectedText = "No connection"
-# currentDisplayText = "Cat Car"
-# isDisconnected = False
-# sleepTime = 0.1
-
-
-# Define a client to connect to the local redis instance
-# redisClient = redis.StrictRedis()
-
-# while True:
-#     # Check to see if we're connected to a phone
-#     # We don't need to poll as often if we aren't connected
-#     if not redisClient.exists("heartbeat"):
-#         if currentDisplayText != notConnectedText:
-#             currentDisplayText = notConnectedText
-#             print("Car Disconnected")
-#             isDisconnected = True
-#             redisClient.set('disp.text', currentDisplayText)
-#         sleepTime = 1.0
-#     elif isDisconnected:
-#         isDisconnected = False
-#         redisClient.set('disp.text', "Connected!")
-#         sleepTime = 0.1
-
-#     # Get the current display text.
-#     # If it's the same as last time, keep looping
-#     newDispText = redisClient.get('disp.text')
-#     if newDispText is None:
-#         # If the display text is unset, set it to default
-#         redisClient.set('disp.text', currentDisplayText)
-#     elif currentDisplayText != newDispText:
-#         currentDisplayText = newDispText
-#         print(newDispText + " Changed.")
-
-#     time.sleep(sleepTime)  # be nice to the system and sleep again
