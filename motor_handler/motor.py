@@ -11,10 +11,10 @@ rearSpeed = 1000
 
 
 def emergency_stop():
-    pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, 0)
-    pi.set_servo_pulsewidth(pinout.REAR_MOTOR, 0)
-    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 0)
-    pi.set_servo_pulsewidth(pinout.REAR_STEERING, 0)
+    pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, 1000)
+    pi.set_servo_pulsewidth(pinout.REAR_MOTOR, 1000)
+    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 1000)
+    pi.set_servo_pulsewidth(pinout.REAR_STEERING, 1000)
     pi.stop()
 
 
@@ -41,7 +41,7 @@ pi = pigpio.pi()
 
 redisClient = redis.StrictRedis()
 
-
+arm()
 while True:
     # 100 Hz data refresh rate
     sleep(.01)
@@ -60,10 +60,15 @@ while True:
     if isConnected:
         frontMotorSpeed = redisClient.get("move.speed.front")
         rearMotorSpeed = redisClient.get("move.speed.rear")
+
+        if frontMotorSpeed is None:
+            frontMotorSpeed = 1000
+        if rearMotorSpeed is None:
+            rearMotorSpeed = 1000
         # If we have a new front speed from the app
         if frontMotorSpeed != frontSpeed:
             frontSpeed = frontMotorSpeed
             pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, frontSpeed)
         if rearMotorSpeed != rearSpeed:
             rearSpeed = rearMotorSpeed
-            pi.set_servo_pulsewidth(pinout.REAR_MOTOR, rearMotorSpeed)
+            pi.set_servo_pulsewidth(pinout.REAR_MOTOR, rearSpeed)
