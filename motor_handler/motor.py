@@ -14,7 +14,7 @@ steerAngle = 1000
 def emergency_stop():
     pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, 1000)
     pi.set_servo_pulsewidth(pinout.REAR_MOTOR, 1000)
-    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 1000)
+    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 1500)
 
 
 def arm():
@@ -29,7 +29,7 @@ def arm():
     pi.set_servo_pulsewidth(pinout.REAR_MOTOR, 1000)
     sleep(.1)
     # Zero the servos
-    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 1000)
+    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 1500)
     sleep(.1)
 
 
@@ -63,7 +63,7 @@ try:
             steeringAngle = redisClient.get("move.steer")
 
             if steeringAngle is None:
-                steeringAngle = 1000
+                steeringAngle = 1500
             if frontMotorSpeed is None:
                 frontMotorSpeed = 1000
             if rearMotorSpeed is None:
@@ -79,4 +79,7 @@ try:
                 steerAngle = steeringAngle
                 pi.set_servo_pulsewidth(pinout.FRONT_STEERING, steerAngle)
 finally:
+    pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, 0)
+    pi.set_servo_pulsewidth(pinout.REAR_MOTOR, 0)
+    pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 0)
     pi.stop()
