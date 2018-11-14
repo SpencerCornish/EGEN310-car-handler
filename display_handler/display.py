@@ -63,7 +63,7 @@ def setDisplayText():
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
     # Display image.
     draw.text((x, top), currentDisplayText, font=font, fill=255)
-    disp.image(image)
+    disp.image(image.flip(180))
     disp.display()
 
 
