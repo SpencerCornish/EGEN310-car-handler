@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import subprocess
 import redis
@@ -22,7 +24,7 @@ disp.clear()
 disp.display()
 
 # Create blank image for drawing.
-# Make sure to create image with mode '1' for 1-bit color.
+# Create image with mode '1' for 1-bit color.
 width = disp.width
 height = disp.height
 image = Image.new('1', (width, height))
@@ -48,7 +50,7 @@ x = 0
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
 font = ImageFont.truetype('font.ttf', 12)
 
-currentDisplayText = ""
+currentDisplayText = "Antblood"
 isConnected = False
 # Define a client to connect to the local redis instance
 redisClient = redis.StrictRedis()
@@ -62,6 +64,8 @@ def setDisplayText():
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
     # Display image.
+    if currentDisplayText is '':
+
     draw.text((x, top), currentDisplayText, font=font, fill=255)
     disp.image(image.flip(180))
     disp.display()

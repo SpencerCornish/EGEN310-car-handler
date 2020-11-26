@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 from mpu6050 import mpu6050
 import redis

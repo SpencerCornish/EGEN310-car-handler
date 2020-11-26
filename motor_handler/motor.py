@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import pigpio
 import pinout
 import redis
@@ -38,6 +40,7 @@ pi = pigpio.pi()
 
 
 redisClient = redis.StrictRedis()
+redisClient.publish()
 
 arm()
 
@@ -45,30 +48,31 @@ try:
     while True:
         # 100 Hz data refresh rate
         sleep(.01)
-        # if we're connected but we think we aren't update.
+        # if we're connected but we think we aren't, update.
         if redisClient.exists("tele.heartbeat"):
             if not isConnected:
                 isConnected = True
-                print("reconnection event. isConnected changing to True")
-        # if we're disconnected but we think we are update
+                print("reconnected to control app")
+        # if we're disconnected but we think we are, update
         else:
             if isConnected:
                 isConnected = False
                 emergency_stop()
-                print("disconnection event. isConnected changing to False")
+                print("disconnected from control app")
 
         if isConnected:
             frontMotorSpeed = redisClient.get("move.speed.front")
             rearMotorSpeed = redisClient.get("move.speed.rear")
             steeringAngle = redisClient.get("move.steer")
-
+            #  Initialize defaults, if they haven't been set by the app yet
             if steeringAngle is None:
                 steeringAngle = 1500
             if frontMotorSpeed is None:
                 frontMotorSpeed = 1000
             if rearMotorSpeed is None:
                 rearMotorSpeed = 1000
-            # If we have a new front speed from the app
+
+            # If we have a new speed/steering setting from the app
             if frontMotorSpeed != frontSpeed:
                 frontSpeed = frontMotorSpeed
                 pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, frontSpeed)
@@ -79,6 +83,7 @@ try:
                 steerAngle = steeringAngle
                 pi.set_servo_pulsewidth(pinout.FRONT_STEERING, steerAngle)
 finally:
+    # Reset everything to default
     pi.set_servo_pulsewidth(pinout.FRONT_MOTOR, 0)
     pi.set_servo_pulsewidth(pinout.REAR_MOTOR, 0)
     pi.set_servo_pulsewidth(pinout.FRONT_STEERING, 0)
